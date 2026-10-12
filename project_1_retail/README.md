@@ -167,3 +167,48 @@ To turn these data models into operational business insights, construct a single
 *   **Branches:** `category` ➡️ `sub_category` ➡️ `product_name`.
 *   **Tooltips Embedded:** `stock_on_hand` vs. `safety_stock_level`.
 *   **Executive Purpose:** Allows category leads to instantly identify which exact styles are over-stocked or sitting below safe operational inventory thresholds.
+
+---
+
+## 🎨 Enterprise Dashboard Interactive Storyboard
+
+Below is the live operational walkthrough of the analytical engine, proving how business users leverage cross-filtering matrices to audit revenue leakage, target category margin changes, and track supply pipeline risk profiles:
+
+### 1. Global Executive System Baseline
+*Tracks total corporate revenue intake and average gross profit bounds across all segments simultaneously.*
+![1. Global System Baseline](1_global_overview.png)
+
+### 2. Segment Drill-Down: Transaction Isolation (Denim Jeans)
+*Isolates individual product groupings to track performance stability under target sales volume conditions.*
+![2. Denim Jeans Isolation](2_filter_denim_jeans.png)
+
+### 3. Core Margin Density Maximization (Leather Belt)
+*Pinpoints peak margin categories yielding top efficiency benchmarks to direct active pricing optimization.*
+![3. Leather Belt Performance](3_filter_leather_belt.png)
+
+### 4. Revenue/Margin Variance Matrix (Chino Trousers)
+*Balances volume allocations against corresponding margin margins to evaluate category commercial health.*
+![4. Chino Trousers Audit](4_filter_chino_trousers.png)
+
+### 5. Tactical Review Vector (Formal Shoes)
+*Aggregates inventory tracking parameters across premium categories to verify regional warehouse flow logs.*
+![5. Formal Shoes Analysis](5_filter_formal_shoes.png)
+
+### 6. Discount Degradation Matrix (Slim Fit Shirt)
+*Exposes margin shrinkage down to 51.22% caused by loose, non-automated promotional markdown strategies.*
+![6. Slim Fit Shirt Variance](6_filter_slim_fit_shirt.png)
+
+### 7. Logistics Footprint Profiling (Running Sneakers)
+*Maintains active monitoring loops over incoming active inventory stocks to balance distribution speeds.*
+![7. Running Sneakers Check](7_filter_running_sneakers.png)
+
+### 8. Automated Supply Exception Alert Grid
+*The system-wide exception engine shading low-stock profiles in red where volumes drop beneath the 200-unit safe threshold.*
+![8. Active Stockout Warnings](8_active_stockout_alerts.png)
+### 9. Production DAX Semantic Measure Implementation
+*Validates the implementation of custom explicit analytics calculators running natively inside the Power BI memory pool.*
+![9. DAX Implementation Layer](9_dax_measures.png)
+
+### 10. Relational Star-Schema Relationship Model Map
+*Displays the normalized data mapping architecture connecting transactional facts directly to independent dimension lookup nodes.*
+![10. Relational Schema Data Model](10_relationship_model.png)

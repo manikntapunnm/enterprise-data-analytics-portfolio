@@ -1,0 +1,7 @@
+product_id,product_name,category,sub_category,mrp,unit_cost
+101,Slim Fit Shirt,Apparel,Formal Wear,1200,550
+102,Denim Jeans,Apparel,Casual Wear,2500,1100
+103,Leather Belt,Accessories,Leather Goods,800,320
+104,Chino Trousers,Apparel,Casual Wear,1800,800
+105,Running Sneakers,Footwear,Sports,3500,1500
+106,Formal Shoes,Footwear,Formal Wear,4000,1800
