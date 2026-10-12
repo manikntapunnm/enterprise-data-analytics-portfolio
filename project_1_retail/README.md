@@ -1,5 +1,112 @@
 # Project 1: Enterprise Retail Revenue & Inventory Optimization Matrix
 
+## 🧠 Strategic Business Questions & Multi-Tool Solutions
+
+### Question 1: Which products are at high risk of a "Stockout" (Inventory Deficit)?
+*   **The Business Goal:** Identify products where the current inventory (`stock_on_hand`) has fallen below the company's mandated `safety_stock_level`. This allows store managers to reorder stock before losing sales.
+*   **The SQL Solution:**
+    ```sql
+    SELECT 
+        p.product_name,
+        p.category,
+        i.stock_on_hand,
+        i.safety_stock_level,
+        (i.safety_stock_level - i.stock_on_hand) as units_deficit
+    FROM dim_inventory i
+    JOIN dim_products p ON i.product_id = p.product_id
+    WHERE i.stock_on_hand < i.safety_stock_level
+    ORDER BY units_deficit DESC;
+    ```
+*   **The Power BI (DAX) Solution:** Create a calculated column or measure to flag the risk level:
+    ```dax
+    Stock Status = 
+    IF(
+        SUM(dim_inventory[stock_on_hand]) < SUM(dim_inventory[safety_stock_level]),
+        "⚠️ High Reorder Risk",
+        "✅ Stock Healthy"
+    )
+    ```
+    *Visual Implementation:* Put this into a **Table Visual** and apply Conditional Formatting to highlight rows labeled "High Reorder Risk" in light red.
+
+---
+
+### Question 2: What is the exact financial impact of promotional discounts on our profit margins?
+*   **The Business Goal:** Determine if aggressive discounting (e.g., 10% or 20% off) is destroying product profitability or driving enough volume to make up for it.
+*   **The SQL Solution:**
+    ```sql
+    SELECT 
+        f.discount_pct * 100 as discount_tier_pct,
+        COUNT(f.transaction_id) as total_orders,
+        ROUND(SUM(f.net_revenue), 2) as total_net_revenue,
+        ROUND((SUM(f.net_revenue) - SUM(f.total_cost)) / SUM(f.net_revenue) * 100, 2) as realized_profit_margin_pct
+    FROM fact_sales f
+    GROUP BY 1
+    ORDER BY 1 ASC;
+    ```
+*   **The Power BI (DAX) Solution:** Create two explicit measures to track margin degradation:
+    ```dax
+    Total Net Revenue = SUM(fact_sales[net_revenue])
+    ```
+    ```dax
+    Gross Margin % = 
+    DIVIDE(
+        SUM(fact_sales[net_revenue]) - SUM(fact_sales[total_cost]), 
+        SUM(fact_sales[net_revenue]), 
+        0
+    )
+    ```
+    *Visual Implementation:* Create a **Scatter Plot** with `discount_pct` on the X-axis, `Gross Margin %` on the Y-axis, and `Product Name` as the details. This shows at a glance which products become unprofitable when discounted.
+
+---
+
+### Question 3: Who are our top-performing product categories by absolute profit (not just revenue)?
+*   **The Business Goal:** Sometimes a category brings in massive revenue but has very tight profit margins due to manufacturing costs. Executives need to know where the real profit is generated.
+*   **The SQL Solution:**
+    ```sql
+    SELECT 
+        p.category,
+        ROUND(SUM(f.net_revenue), 2) as total_revenue,
+        ROUND(SUM(f.net_revenue) - SUM(f.total_cost), 2) as absolute_profit,
+        ROUND((SUM(f.net_revenue) - SUM(f.total_cost)) / SUM(f.net_revenue) * 100, 2) as category_margin_pct
+    FROM fact_sales f
+    JOIN dim_products p ON f.product_id = p.product_id
+    GROUP BY p.category
+    ORDER BY absolute_profit DESC;
+    ```
+*   **The Power BI (DAX) Solution:** Create a measure for total profit:
+    ```dax
+    Absolute Profit = [Total Net Revenue] - SUM(fact_sales[total_cost])
+    ```
+    *Visual Implementation:* Use a **Donut Chart** representing `Absolute Profit` by Category next to a **Clustered Bar Chart** showing `Total Net Revenue` by Category to illustrate the structural differences between revenue scale and actual profit.
+
+---
+
+### Question 4: How do we track our running cumulative (YTD) revenue performance?
+*   **The Business Goal:** Corporate leadership tracks cumulative Year-to-Date (YTD) charts to check if the business is on track to hit annual financial targets compared to previous months.
+*   **The SQL Solution:**
+    ```sql
+    WITH monthly_totals AS (
+        SELECT 
+            DATE_TRUNC('month', CAST(order_date AS DATE)) as sales_month,
+            SUM(net_revenue) as monthly_revenue
+        FROM fact_sales
+        GROUP BY 1
+    )
+    SELECT 
+        sales_month,
+        ROUND(monthly_revenue, 2) as revenue_this_month,
+        ROUND(SUM(monthly_revenue) OVER (ORDER BY sales_month), 2) as cumulative_ytd_revenue
+    FROM monthly_totals
+    ORDER BY sales_month;
+    ```
+*   **The Power BI (DAX) Solution:** Ensure your `fact_sales[order_date]` is marked as a date data type, then write a time-intelligence measure:
+    ```dax
+    YTD Cumulative Revenue = TOTALYTD([Total Net Revenue], 'fact_sales'[order_date])
+    ```
+    *Visual Implementation:* Display this measure using an **Area Chart** with `order_date` on the X-axis. The smooth, upward-sloping visualization lets executives track total business scaling smoothly over time.
+
+---
+
 ## 🏢 Business Context & Core Problem
 In major retail operations (like Amazon, Flipkart, or reliance networks), overstocking ties up critical working capital, while stockouts lead directly to revenue leakage and customer frustration. 
 
