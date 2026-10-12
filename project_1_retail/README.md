@@ -177,6 +177,9 @@ Below is the live operational walkthrough of the analytical engine, proving how 
 ### 1. Global Executive System Baseline
 *Tracks total corporate revenue intake and average gross profit bounds across all segments simultaneously.*
 ![1. Global System Baseline](1_global_overview.png)
+<img width="1188" height="697" alt="global_overview" src="https://github.com/user-attachments/assets/785cf369-fc9d-48c6-bb30-4d5208e688d0" />
+
+
 
 ### 2. Segment Drill-Down: Transaction Isolation (Denim Jeans)
 *Isolates individual product groupings to track performance stability under target sales volume conditions.*
