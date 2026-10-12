@@ -176,42 +176,69 @@ Below is the live operational walkthrough of the analytical engine, proving how 
 
 ### 1. Global Executive System Baseline
 *Tracks total corporate revenue intake and average gross profit bounds across all segments simultaneously.*
-![1. Global System Baseline](1_global_overview.png)
+![1. Global System Baseline]
 <img width="1188" height="697" alt="global_overview" src="https://github.com/user-attachments/assets/785cf369-fc9d-48c6-bb30-4d5208e688d0" />
 
 
 
 ### 2. Segment Drill-Down: Transaction Isolation (Denim Jeans)
 *Isolates individual product groupings to track performance stability under target sales volume conditions.*
-![2. Denim Jeans Isolation](2_filter_denim_jeans.png)
+![2. Denim Jeans Isolation]
+<img width="1189" height="685" alt="filter_denim_jeans" src="https://github.com/user-attachments/assets/1dbae174-6b96-475a-9b8d-5f8168e0f1d9" />
 
 ### 3. Core Margin Density Maximization (Leather Belt)
 *Pinpoints peak margin categories yielding top efficiency benchmarks to direct active pricing optimization.*
-![3. Leather Belt Performance](3_filter_leather_belt.png)
+![3. Leather Belt Performance]
+
+<img width="1185" height="678" alt="filter_leather_belt" src="https://github.com/user-attachments/assets/8870c12c-229c-4958-af12-37bd6a39dcb5" />
+
 
 ### 4. Revenue/Margin Variance Matrix (Chino Trousers)
 *Balances volume allocations against corresponding margin margins to evaluate category commercial health.*
-![4. Chino Trousers Audit](4_filter_chino_trousers.png)
+![4. Chino Trousers Audit]
+
+<img width="1189" height="688" alt="ilter_chino_trousers" src="https://github.com/user-attachments/assets/d5147f5a-7823-4159-9dbd-eb53627d8a6f" />
+
 
 ### 5. Tactical Review Vector (Formal Shoes)
 *Aggregates inventory tracking parameters across premium categories to verify regional warehouse flow logs.*
-![5. Formal Shoes Analysis](5_filter_formal_shoes.png)
+![5. Formal Shoes Analysis]<img width="1194" height="692" alt="filter_slim_fit_shirt" src="https://github.com/user-attachments/assets/a3ae68a9-0ff5-4c72-b1c3-4b8d365c00b7" />
+
+
+<img width="1190" height="693" alt="filter_formal_shoes" src="https://github.com/user-attachments/assets/dab1b4c7-244b-476b-bf3d-c5f0ae553030" />
+
 
 ### 6. Discount Degradation Matrix (Slim Fit Shirt)
 *Exposes margin shrinkage down to 51.22% caused by loose, non-automated promotional markdown strategies.*
-![6. Slim Fit Shirt Variance](6_filter_slim_fit_shirt.png)
+![6. Slim Fit Shirt Variance]
+
+<img width="1194" height="692" alt="filter_slim_fit_shirt" src="https://github.com/user-attachments/assets/443112a6-d30f-4896-b48d-d974fca949a1" />
+
 
 ### 7. Logistics Footprint Profiling (Running Sneakers)
 *Maintains active monitoring loops over incoming active inventory stocks to balance distribution speeds.*
-![7. Running Sneakers Check](7_filter_running_sneakers.png)
+![7. Running Sneakers Check]
+
+<img width="1193" height="690" alt="filter_running_sneakers" src="https://github.com/user-attachments/assets/05d77d04-916a-4c23-8cd8-947b6fb4aae6" />
+
 
 ### 8. Automated Supply Exception Alert Grid
 *The system-wide exception engine shading low-stock profiles in red where volumes drop beneath the 200-unit safe threshold.*
-![8. Active Stockout Warnings](8_active_stockout_alerts.png)
+![8. Active Stockout Warnings]
+<img width="1177" height="652" alt="active_stockout_alerts" src="https://github.com/user-attachments/assets/b8f17f64-8c61-4f2b-9c40-645716adcb57" />
+
+
+
 ### 9. Production DAX Semantic Measure Implementation
 *Validates the implementation of custom explicit analytics calculators running natively inside the Power BI memory pool.*
-![9. DAX Implementation Layer](9_dax_measures.png)
+![9. DAX Implementation Layer]
+
+<img width="757" height="195" alt="dax_measures" src="https://github.com/user-attachments/assets/8e880b2b-ac81-4d69-afa7-dbaff59b021e" />
+
 
 ### 10. Relational Star-Schema Relationship Model Map
 *Displays the normalized data mapping architecture connecting transactional facts directly to independent dimension lookup nodes.*
 ![10. Relational Schema Data Model](10_relationship_model.png)
+
+<img width="1064" height="643" alt="relationship_model" src="https://github.com/user-attachments/assets/ddd85189-ec68-45a0-a136-4031734d04ce" />
+
