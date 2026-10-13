@@ -1,64 +1,214 @@
-import pandas as pd
+"""Generate reproducible synthetic customer support tickets."""
+
+from __future__ import annotations
+
+import csv
 import random
-from datetime import datetime, timedelta
-import os
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
-print("⏳ Generating corporate support infrastructure logs...")
+SEED = 42
+TICKET_COUNT = 30_000
 
-ticket_categories = ['Login Issue', 'Payment Failure', 'Bug Report', 'Subscription Change', 'API Timeout']
-priorities = ['P1-Critical', 'P2-High', 'P3-Medium', 'P4-Low']
-statuses = ['Resolved', 'Closed', 'Escalated', 'Open']
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_FILE = DATA_DIR / "support_tickets.csv"
 
-support_data = []
-base_date = datetime(2026, 1, 1)
+SLA_TARGETS = {
+    "P1-Critical": 60,
+    "P2-High": 240,
+    "P3-Medium": 1_440,
+    "P4-Low": 2_880,
+}
 
-for i in range(30000):
-    ticket_id = f"TKT_{500000 + i}"
-    created_time = base_date + timedelta(
-        days=random.randint(0, 200), 
-        hours=random.randint(0, 23), 
-        minutes=random.randint(0, 59)
-    )
-    category = random.choice(ticket_categories)
-    priority = random.choices(priorities, weights=[0.1, 0.2, 0.4, 0.3])[0]
-    status = random.choices(statuses, weights=[0.5, 0.3, 0.1, 0.1])[0]
-    
-    # Simulate processing intervals based on target business priority rules
-    if status in ['Resolved', 'Closed']:
-        if priority == 'P1-Critical':
-            resolution_hours = random.uniform(0.5, 4.0)
-        elif priority == 'P2-High':
-            resolution_hours = random.uniform(2.0, 12.0)
-        else:
-            resolution_hours = random.uniform(12.0, 72.0)
-    else:
-        resolution_hours = None
-        
-    # Check compliance rules (P1 must be cleared in <2hrs, P2 in <8hrs)
-    is_sla_violated = 0
-    if resolution_hours:
-        if priority == 'P1-Critical' and resolution_hours > 2.0:
-            is_sla_violated = 1
-        elif priority == 'P2-High' and resolution_hours > 8.0:
-            is_sla_violated = 1
-            
-    support_data.append([
-        ticket_id, 
-        created_time.strftime('%Y-%m-%d %H:%M:%S'), 
-        category, 
-        priority, 
-        status, 
-        round(resolution_hours, 2) if resolution_hours else None, 
-        is_sla_violated
-    ])
+PRIORITIES = list(SLA_TARGETS)
+PRIORITY_WEIGHTS = [5, 20, 45, 30]
 
-df_support = pd.DataFrame(
-    support_data, 
-    columns=['ticket_id', 'created_at', 'issue_category', 'priority_tier', 'status', 'resolution_hours', 'sla_violated_flag']
-)
+CATEGORIES = [
+    "Login",
+    "Payment",
+    "Network",
+    "Application",
+    "Hardware",
+    "Account Access",
+]
 
-# Target export straight into the local project path
-output_path = os.path.join(os.path.dirname(__file__), 'support_operations.csv')
-df_support.to_csv(output_path, index=False)
+TEAMS = [
+    "Technical Support",
+    "Payments",
+    "Infrastructure",
+    "Application Support",
+]
 
-print(f"✅ Success! Support Operations Dataset created at: {output_path}")
+STATUSES = ["Open", "In Progress", "Escalated", "Resolved"]
+STATUS_WEIGHTS = [12, 23, 10, 55]
+
+FIELDS = [
+    "ticket_id",
+    "customer_id",
+    "created_at",
+    "resolved_at",
+    "priority",
+    "status",
+    "category",
+    "assigned_team",
+    "first_response_minutes",
+    "resolution_minutes",
+    "sla_target_minutes",
+    "escalated",
+]
+
+
+def generate_tickets(
+    count: int = TICKET_COUNT,
+    seed: int = SEED,
+    now: datetime | None = None,
+) -> list[dict]:
+    """Generate tickets using a fixed seed and reporting cutoff."""
+
+    if count < 1:
+        raise ValueError("count must be greater than zero")
+
+    rng = random.Random(seed)
+    now = now or datetime.now(timezone.utc)
+
+    if now.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+
+    now = now.astimezone(timezone.utc)
+    start = now - timedelta(days=180)
+    total_minutes = int((now - start).total_seconds() // 60)
+
+    tickets = []
+
+    for i in range(1, count + 1):
+        created_at = start + timedelta(
+            minutes=rng.randint(0, total_minutes)
+        )
+
+        priority = rng.choices(
+            PRIORITIES, weights=PRIORITY_WEIGHTS, k=1
+        )[0]
+
+        status = rng.choices(
+            STATUSES, weights=STATUS_WEIGHTS, k=1
+        )[0]
+
+        first_response_minutes = rng.randint(1, 180)
+
+        # A log-normal distribution produces mostly shorter
+        # resolutions with a smaller number of long-running cases.
+        resolution_minutes = max(
+            1, int(rng.lognormvariate(5.0, 1.0))
+        )
+
+        proposed_resolution = created_at + timedelta(
+            minutes=resolution_minutes
+        )
+
+        is_resolved = (
+            status == "Resolved" and proposed_resolution <= now
+        )
+
+        if status == "Resolved" and not is_resolved:
+            status = "In Progress"
+
+        resolved_at = proposed_resolution if is_resolved else None
+        actual_resolution = resolution_minutes if is_resolved else None
+
+        escalated = (
+            status == "Escalated"
+            or (
+                priority == "P1-Critical"
+                and rng.random() < 0.35
+            )
+        )
+
+        tickets.append({
+            "ticket_id": f"TKT-{i:06d}",
+            "customer_id": f"CUST-{rng.randint(1, 8000):05d}",
+            "created_at": created_at.isoformat(),
+            "resolved_at": (
+                resolved_at.isoformat() if resolved_at else ""
+            ),
+            "priority": priority,
+            "status": status,
+            "category": rng.choice(CATEGORIES),
+            "assigned_team": rng.choice(TEAMS),
+            "first_response_minutes": first_response_minutes,
+            "resolution_minutes": (
+                actual_resolution if actual_resolution is not None else ""
+            ),
+            "sla_target_minutes": SLA_TARGETS[priority],
+            "escalated": str(escalated).lower(),
+        })
+
+    return tickets
+
+
+def validate_tickets(tickets: list[dict]) -> None:
+    """Fail fast if generated records violate core data contracts."""
+
+    ids = set()
+
+    for ticket in tickets:
+        ticket_id = ticket["ticket_id"]
+
+        if ticket_id in ids:
+            raise ValueError(f"Duplicate ticket ID: {ticket_id}")
+        ids.add(ticket_id)
+
+        if ticket["priority"] not in SLA_TARGETS:
+            raise ValueError(f"Invalid priority: {ticket['priority']}")
+
+        created = datetime.fromisoformat(ticket["created_at"])
+        if created.tzinfo is None:
+            raise ValueError(f"Naive creation timestamp: {ticket_id}")
+
+        resolved_text = ticket["resolved_at"]
+
+        if resolved_text:
+            resolved = datetime.fromisoformat(resolved_text)
+
+            if resolved < created:
+                raise ValueError(
+                    f"Resolution precedes creation: {ticket_id}"
+                )
+
+            if not ticket["resolution_minutes"]:
+                raise ValueError(
+                    f"Missing duration for resolved ticket: {ticket_id}"
+                )
+        elif ticket["resolution_minutes"] != "":
+            raise ValueError(
+                f"Unresolved ticket has resolution duration: {ticket_id}"
+            )
+
+        if ticket["sla_target_minutes"] != SLA_TARGETS[ticket["priority"]]:
+            raise ValueError(f"Incorrect SLA target: {ticket_id}")
+
+
+def main() -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    tickets = generate_tickets()
+    validate_tickets(tickets)
+
+    with OUTPUT_FILE.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=FIELDS)
+        writer.writeheader()
+        writer.writerows(tickets)
+
+    resolved_count = sum(bool(t["resolved_at"]) for t in tickets)
+    escalated_count = sum(t["escalated"] == "true" for t in tickets)
+
+    print(f"Generated: {len(tickets):,} tickets")
+    print(f"Unique IDs: {len({t['ticket_id'] for t in tickets}):,}")
+    print(f"Resolved: {resolved_count:,}")
+    print(f"Unresolved: {len(tickets) - resolved_count:,}")
+    print(f"Escalated: {escalated_count:,}")
+    print(f"Validated CSV: {OUTPUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: support_sla_postgres
+    environment:
+      POSTGRES_DB: support_analytics
+      POSTGRES_USER: support_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_dev_password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - support_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U support_user -d support_analytics"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  support_postgres_data:
