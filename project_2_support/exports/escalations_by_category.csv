@@ -1,0 +1,7 @@
+category,total_tickets,escalated_tickets,escalation_rate_pct
+Hardware,5111,627,12.27
+Account Access,4918,583,11.85
+Login,5095,582,11.42
+Application,5002,565,11.30
+Payment,4941,552,11.17
+Network,4933,546,11.07

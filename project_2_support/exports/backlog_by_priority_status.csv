@@ -1,0 +1,13 @@
+priority,status,backlog_count,avg_age_minutes
+P1-Critical,Escalated,153,133997.80
+P1-Critical,In Progress,354,132562.47
+P1-Critical,Open,192,132772.40
+P2-High,Escalated,559,131425.52
+P2-High,In Progress,1326,129111.84
+P2-High,Open,753,131054.71
+P3-Medium,Escalated,1381,130013.73
+P3-Medium,In Progress,3069,129134.93
+P3-Medium,Open,1637,129419.60
+P4-Low,Escalated,896,131946.38
+P4-Low,In Progress,2085,130319.36
+P4-Low,Open,1085,130272.53

@@ -119,3 +119,21 @@ SELECT
 FROM support_tickets
 GROUP BY created_at::date
 ORDER BY ticket_date;
+
+-- 5. Escalation rates by category
+
+SELECT
+    category,
+    COUNT(*) AS total_tickets,
+    COUNT(*) FILTER (
+        WHERE escalated
+    ) AS escalated_tickets,
+    ROUND(
+        100.0 * COUNT(*) FILTER (
+            WHERE escalated
+        ) / NULLIF(COUNT(*), 0),
+        2
+    ) AS escalation_rate_pct
+FROM support_tickets
+GROUP BY category
+ORDER BY escalation_rate_pct DESC, category;

@@ -1,0 +1,5 @@
+priority,resolved_tickets,tickets_within_sla,breached_tickets,sla_compliance_pct,avg_resolution_minutes
+P1-Critical,817,147,670,17.99,254.61
+P2-High,3334,2240,1094,67.19,249.81
+P3-Medium,7463,7380,83,98.89,241.86
+P4-Low,4896,4892,4,99.92,236.68
