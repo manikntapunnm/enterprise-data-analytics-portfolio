@@ -1,0 +1,15 @@
+~$*.docx
+
+# Python cache files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Environment secrets
+.env
+
+# Temporary Office files
+~$*.docx
+
+# Tableau temporary files
+*.twbr
